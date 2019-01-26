@@ -15,44 +15,56 @@ from api import serializers
 ##################Utiliyties#############################################
 import json,requests,os,sys,uuid
 from django.http import HttpResponse
+from django.shortcuts import render
+
+def index(request):
+    return render(request, 'api/index.html', {})
 
 class AudioList(APIView):
     """
     List all snippets, or create a new snippet.
     """
     def get(self, request, format=None):
-        model_obj = models.MediaFileUpload.objects.all()
+        model_obj = models.MediaFileUpload.objects.filter(is_label=False)
         serializer = serializers.MediaFileUploadSerializer(model_obj, many=True)
-        return  Response(serializer.data)
+        data_dict={}
+        for i in serializer.data[0]:
+            if i=='media_file':
+                data_dict[i]="http://127.0.0.1:8000"+serializer.data[0][i]
+            else:
+                data_dict[i] = serializer.data[0][i]
+
+        return  Response(data_dict)
 
 class Annatotaion(APIView):
     """
     Retrieve, update or delete a snippet instance.
     """
 
-    parser_classes = (JSONParser,MultiPartParser,)
+    #parser_classes = (JSONParser,MultiPartParser,)
     def post(self, request, format=None):
-        try:
-            #email = request.query_params["email"]
-            filename = request.data["filename"]
-            text = request.data['text']
-        except:
-            filename=None
-            text=None
+
+        #email = request.query_params["email"]
+        filename = request.data["filename"]
+        #filename="uploaded_media/LJ040-0107.wav"
+        text = request.data['text']
+        print("data: --------------------",request.data)
+        print("text - - - - - - -  - - -  -", text)
+
 
         print("filename: ",filename,text)
         if filename and text:
-            media_obj=models.MediaFileUpload.objects.get(filename)
+            media_obj=models.MediaFileUpload.objects.get(media_file="uploaded_media/"+os.path.split(filename)[-1])
             media_obj.text=text
             media_obj.is_label=True
             media_obj.save()
 
             RESPONSE = {"success": True,
-                        "response":"hsdjfhhjsgfjhsdgjhsfjsdhgkjsdf"}
+                        "response":{"path":str(media_obj.media_file),"text":str(media_obj.text)}}
             return Response(RESPONSE,status=status.HTTP_200_OK)
         RESPONSE = {"success": False,
                     "response":"Not found" }
-        return Response()
+        return Response(RESPONSE)
     
     
 
@@ -74,7 +86,7 @@ class UploadMedia(APIView):
             media_obj.save()
 
             RESPONSE = {"success": True,
-                        "response":"hsdjfhhjsgfjhsdgjhsfjsdhgkjsdf"}
+                        "response":str(media_obj.media_file)}
             return Response(RESPONSE,status=status.HTTP_200_OK)
         RESPONSE = {"success": False,
                     "response":"Not found" }

@@ -1,20 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>jQuery AJAX POST Form</title>
+    <meta charset="utf-8">
+</head>
+<body>
+
+<div id="response">
+    <pre></pre>
+</div>
+
+<form id="my-form">
+    <input type="text" id="first-name" name="first-name" placeholder="First Name" />
+    <input type="text" id="last-name" name="last-name" placeholder="Last Name" />
+
+    <button type="submit">Submit</button>
+</form>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <script>
-$(document).ready(function(){
+
+ $(document).ready(function(){
   $("button").click(function(){
-    $.get("http://127.0.0.1:8000/audio_list/", function(data, status){
+    $.post("http://127.0.0.1:8000/label/",
+    {
+      text: $('#first-name').val(),
+      city: $('#last-name').val()
+    },
+    function(data,status){
       alert("Data: " + data + "\nStatus: " + status);
     });
   });
 });
+
 </script>
-</head>
-<body>
-
-<button>Send an HTTP GET request to a page and get the result back</button>
-
 </body>
 </html>
+
