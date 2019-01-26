@@ -16,6 +16,7 @@ from api import serializers
 import json,requests,os,sys,uuid
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.conf import settings
 
 def index(request):
     return render(request, 'api/index.html', {})
@@ -30,7 +31,7 @@ class AudioList(APIView):
         data_dict={}
         for i in serializer.data[0]:
             if i=='media_file':
-                data_dict[i]="http://127.0.0.1:8000"+serializer.data[0][i]
+                data_dict[i]=settings.BASE_URL+serializer.data[0][i]
             else:
                 data_dict[i] = serializer.data[0][i]
 
@@ -66,7 +67,7 @@ class Annatotaion(APIView):
                     "response":"Not found" }
         return Response(RESPONSE)
     
-    
+
 
 class UploadMedia(APIView):
     """
