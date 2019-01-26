@@ -6,6 +6,7 @@ from api import views
 
 urlpatterns = [
     path('annotation/', views.index, name='index'),
+    path('', views.index, name='index'),
     path('upload/', views.UploadMedia.as_view(), name='UploadMedia'),
     path('label/', views.Annatotaion.as_view(), name='Annatotaion'),
     path('audio_list/', views.AudioList.as_view(), name='AudioList'),
