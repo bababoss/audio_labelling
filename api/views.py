@@ -17,6 +17,8 @@ import json,requests,os,sys,uuid
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.conf import settings
+from django.db.models import Max
+import random
 
 def index(request):
     return render(request, 'api/index.html', {})
@@ -26,14 +28,17 @@ class AudioList(APIView):
     List all snippets, or create a new snippet.
     """
     def get(self, request, format=None):
+        max_id = models.MediaFileUpload.objects.filter(is_label=False).aggregate(max_id=Max("id"))['max_id']
+        pk = random.randint(1, max_id)
+        model_obj = models.MediaFileUpload.objects.get(pk=pk)
         model_obj = models.MediaFileUpload.objects.filter(is_label=False)
-        serializer = serializers.MediaFileUploadSerializer(model_obj, many=True)
+        serializer = serializers.MediaFileUploadSerializer(random.choice(model_obj))
         data_dict={}
-        for i in serializer.data[0]:
+        for i in serializer.data:
             if i=='media_file':
-                data_dict[i]=settings.BASE_URL+serializer.data[0][i]
+                data_dict[i]=settings.BASE_URL+serializer.data[i]
             else:
-                data_dict[i] = serializer.data[0][i]
+                data_dict[i] = serializer.data[i]
 
         return  Response(data_dict)
 
