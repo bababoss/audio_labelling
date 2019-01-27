@@ -23,6 +23,9 @@ import random
 def index(request):
     return render(request, 'api/index.html', {})
 
+def inhouse(request):
+    return render(request, 'api/inhouse.html', {})
+
 class AudioList(APIView):
     """
     List all snippets, or create a new snippet.
@@ -71,7 +74,37 @@ class Annatotaion(APIView):
         RESPONSE = {"success": False,
                     "response":"Not found" }
         return Response(RESPONSE)
-    
+
+class AnnatotaionInhouse(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+
+    #parser_classes = (JSONParser,MultiPartParser,)
+    def post(self, request, format=None):
+
+        #email = request.query_params["email"]
+        filename = request.data["filename"]
+        #filename="uploaded_media/LJ040-0107.wav"
+        text = request.data['text']
+        print("data: --------------------",request.data)
+        print("text - - - - - - -  - - -  -", text)
+
+
+        print("filename: ",filename,text)
+        if filename and text:
+            media_obj=models.MediaFileUpload.objects.get(media_file="uploaded_media/"+os.path.split(filename)[-1])
+            media_obj.text=text
+            media_obj.is_label=True
+            media_obj.is_inhouse=True
+            media_obj.save()
+
+            RESPONSE = {"success": True,
+                        "response":{"path":str(media_obj.media_file),"text":str(media_obj.text)}}
+            return Response(RESPONSE,status=status.HTTP_200_OK)
+        RESPONSE = {"success": False,
+                    "response":"Not found" }
+        return Response(RESPONSE)
 
 
 class UploadMedia(APIView):

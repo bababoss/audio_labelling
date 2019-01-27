@@ -7,8 +7,10 @@ class MediaFileUpload(models.Model):
 
     media_file=models.FileField(upload_to='uploaded_media',blank=True,null=True)
     is_label=models.BooleanField(default=False)
+    is_inhouse = models.BooleanField(default=False)
     text=models.TextField(blank=True,null=True)
     created=models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
 
 
     class Meta:
