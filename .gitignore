@@ -4,3 +4,4 @@ uploaded_media/*
 /__pycache__/*
 __pycache__/
 */__pycache__/**
+api/migrations/__pycache__/
