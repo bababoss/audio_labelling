@@ -1,5 +1,7 @@
 db.sqlite3
 uploaded_media/*
+uploaded_model/*
+
 **/__pycache__/*
 /__pycache__/*
 __pycache__/

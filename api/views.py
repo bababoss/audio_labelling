@@ -44,6 +44,17 @@ class AudioList(APIView):
                 data_dict[i] = serializer.data[i]
 
         return  Response(data_dict)
+    
+class ModelList(APIView):
+    """
+    List all snippets, or create a new snippet.
+    """
+    def get(self, request, format=None):
+        model = models.ModelFileUpload.objects.all()
+
+        serializer = serializers.ModelFileUploadSerializer(model,many=True)
+
+        return  Response(serializer.data)
 
 class Annatotaion(APIView):
     """
@@ -130,3 +141,28 @@ class UploadMedia(APIView):
         RESPONSE = {"success": False,
                     "response":"Not found" }
         return Response()
+    
+    
+class UploadModel(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+
+    parser_classes = (JSONParser,MultiPartParser,)
+    def post(self, request, format=None):
+        try:
+            model_file = request.data['filename']
+        except:
+            model_file=None
+
+
+        if model_file:
+            model_obj=models.ModelFileUpload.objects.create(model_file=model_file)
+            model_obj.save()
+
+            RESPONSE = {"success": True,
+                        "response":str(model_obj.model_file)}
+            return Response(RESPONSE,status=status.HTTP_200_OK)
+        RESPONSE = {"success": False,
+                    "response":"Not found" }
+        return Response(RESPONSE)

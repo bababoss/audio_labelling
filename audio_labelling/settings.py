@@ -57,11 +57,8 @@ CORS_ALLOW_METHODS = (
     'PUT',
 )
 CORS_ORIGIN_WHITELIST = (
-    'google.com',
-    'hostname.example.com',
-    'localhost:8000',
-    '127.0.0.1:8000/upload/'
-    '127.0.0.1:8000/audio_list/'
+    'http://localhost',
+    'http://127.0.0.1'
 )
 
 CORS_ALLOW_HEADERS = (

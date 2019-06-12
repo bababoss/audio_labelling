@@ -10,8 +10,10 @@ urlpatterns = [
 
     path('labelinhouse/', views.AnnatotaionInhouse.as_view(), name='AnnatotaionInhouse'),
     path('upload/', views.UploadMedia.as_view(), name='UploadMedia'),
+    path('upload/model/', views.UploadModel.as_view(), name='UploadModel'),
     path('label/', views.Annatotaion.as_view(), name='Annatotaion'),
     path('audio_list/', views.AudioList.as_view(), name='AudioList'),
+    path('model_list/', views.ModelList.as_view(), name='ModelList'),
 
 
 ]
